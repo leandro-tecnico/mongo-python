@@ -21,7 +21,17 @@ def adicionar_produto():
     produto_id = produtos_collection.insert_one(novo_produto).inserted_id
     
     return jsonify({"mensagem": "Produto adicionado com sucesso!", "id": str(produto_id)}), 201
+# Rota para listar todos os produtos (READ)
 
+@app.route('/produtos', methods=['GET'])
+def listar_produtos():
+
+    produtos = list(produtos_collection.find())
+    
+    for produto in produtos:
+        produto['_id'] = str(produto['_id']) # Converter ObjectId para string
+    
+    return jsonify(produtos)
 
 if __name__ == '__main__':
     app.run(debug=True)
