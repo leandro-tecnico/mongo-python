@@ -43,6 +43,30 @@ def obter_produto(id):
         return jsonify(produto)
     else:
         return jsonify({"erro": "Produto não encontrado"}), 404
+# Rota para atualizar um produto (UPDATE)
+@app.route('/produtos/<id>', methods=['PUT'])
+def atualizar_produto(id):
+
+    dados_atualizados = request.get_json()
+    resultado = produtos_collection.update_one({"_id": ObjectId(id)}, {"$set": dados_atualizados})
+    
+    if resultado.matched_count > 0:
+        return jsonify({"mensagem": "Produto atualizado com sucesso!"})
+    else:
+        return jsonify({"erro": "Produto não encontrado"}), 404
+
+
+# Rota para remover um produto (DELETE)
+@app.route('/produtos/<id>', methods=['DELETE'])
+
+def remover_produto(id):
+
+    resultado = produtos_collection.delete_one({"_id": ObjectId(id)})
+
+    if resultado.deleted_count > 0:
+        return jsonify({"mensagem": "Produto removido com sucesso!"})
+    else:
+        return jsonify({"erro": "Produto não encontrado"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
